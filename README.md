@@ -42,7 +42,7 @@ Executable file name for the program should be “sccs.exe”.
 ### Use case 1
 
 ```
-	sccs.exe input_file_1 input_file_2 changeset_file
+sccs.exe input_file_1 input_file_2 changeset_file
 ```
 
 Analyze input files input_file_1 and input_file_2, generate instructions to convert input_file_1 to input_file_2, and output the conversion instructions into the changeset_file.
@@ -50,7 +50,7 @@ Analyze input files input_file_1 and input_file_2, generate instructions to conv
 ### Use case 2
 
 ```
-	sccs.exe input_file output_file changeset_file /apply
+sccs.exe input_file output_file changeset_file /apply
 ```
 
 Apply the changeset_file to the input_file and output the results to the output_file.
@@ -71,9 +71,9 @@ int main(int, char**)
 
 *Source file 2*
 
+```
 #include <iostream>
 
-```
 using namespace std;
 
 void main()
