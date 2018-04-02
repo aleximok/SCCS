@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ios>
 #include <exception>
+#include <functional>
 
 #if _DEBUG
 	#define DEBUG_LINE(s) std::cerr << __FILE__ << ':' << __LINE__ << '\t' << s << std::endl;
@@ -54,6 +55,7 @@
 #define END_CATCH }
 
 #define DEFAULT_EXCEPTION_STR_SIZE 2048
+
 
 //
 //	class XException
@@ -148,6 +150,369 @@ struct __Str##exceptionName { \
 	static constexpr const char *sExceptionName = #exceptionName; \
 	static constexpr const char *sExceptionMessage = errorCause; }; \
 typedef TXException<exceptionBase, __Str##exceptionName> exceptionName;
+
+
+//
+//	Exception "caged" catching
+//
+//	Somewhere/sometimes you have to provide	global catch
+//	for all exceptions which possibly could arise in your app.
+//	It looks like a 'try { ... }' with a number of
+//	catch-blocks handling of all kinds of exceptions.
+//	Usually, it is lengthy and verbose. Following stuff
+//	let you minimize all these manipulations providing
+//	a templated solution to handle specific/standart
+//	kinds of catched exceptions.
+//
+//	USAGE: (minimalistic)
+//
+//		XTRY
+//		{
+//			... // your code
+//		}
+//		XEND
+//
+//	USAGE: (extended)
+//
+//		bool bExceptionThrown = XTRY
+//		{
+//			... // your code
+//		}
+//		XCATCH (XMyException1, ex)
+//		{
+//			... // your code
+//		}
+//		XCATCH_END
+//		XCATCH (XMyException2, ex)
+//		{
+//			... // your code
+//		}
+//		XCATCH_END
+//		XEND
+//
+
+
+#if CUSTOM_XHOOKS
+
+// Here's just hooks declaration, provide your own implementation somewhere
+
+void handleXException(const XException &ex);
+void handleStdException(const std::exception &ex);
+void handleAllException();
+
+#else
+
+// Default catched exception handling functions
+
+inline void handleXException(const XException &ex)
+{
+	std::cerr << "Unhandled exception has been caught: " << ex.who() << " (" << ex.what();
+
+	if (*ex.info() != '\0')
+	{
+		std::cerr << ": " << ex.info();
+	}
+
+	std::cerr << ")" << std::endl;
+}
+
+inline void handleStdException(const std::exception &ex)
+{
+	std::cerr << "std::exception has been caught: " << typeid (ex).name();
+
+	if (*ex.what() != '\0')
+	{
+		std::cerr << " (" << ex.what() << ")";
+	}
+
+	std::cerr << std::endl;
+}
+
+inline void handleAllException()
+{
+	std::cerr << "Unknown exception (...) has been caught" << std::endl;
+}
+
+#endif
+
+template<typename TFuncDo, typename TExc1, typename TExc2, typename TExc3, typename TExc4, typename TExc5>
+bool cageException(
+	TFuncDo doFunc,
+	std::function<void(const TExc1&)> catchFunc1,
+	std::function<void(const TExc2&)> catchFunc2,
+	std::function<void(const TExc3&)> catchFunc3,
+	std::function<void(const TExc4&)> catchFunc4,
+	std::function<void(const TExc5&)> catchFunc5)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const TExc1 &ex)
+	{
+		if (catchFunc1)
+		{
+			catchFunc1(ex);
+		}
+	}
+	catch (const TExc2 &ex)
+	{
+		if (catchFunc2)
+		{
+			catchFunc2(ex);
+		}
+	}
+	catch (const TExc3 &ex)
+	{
+		if (catchFunc3)
+		{
+			catchFunc3(ex);
+		}
+	}
+	catch (const TExc4 &ex)
+	{
+		if (catchFunc4)
+		{
+			catchFunc4(ex);
+		}
+	}
+	catch (const TExc5 &ex)
+	{
+		if (catchFunc5)
+		{
+			catchFunc5(ex);
+		}
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+template<typename TFuncDo, typename TExc1, typename TExc2, typename TExc3, typename TExc4>
+bool cageException(
+	TFuncDo doFunc,
+	std::function<void(const TExc1&)> catchFunc1,
+	std::function<void(const TExc2&)> catchFunc2,
+	std::function<void(const TExc3&)> catchFunc3,
+	std::function<void(const TExc4&)> catchFunc4)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const TExc1 &ex)
+	{
+		if (catchFunc1)
+		{
+			catchFunc1(ex);
+		}
+	}
+	catch (const TExc2 &ex)
+	{
+		if (catchFunc2)
+		{
+			catchFunc2(ex);
+		}
+	}
+	catch (const TExc3 &ex)
+	{
+		if (catchFunc3)
+		{
+			catchFunc3(ex);
+		}
+	}
+	catch (const TExc4 &ex)
+	{
+		if (catchFunc4)
+		{
+			catchFunc4(ex);
+		}
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+template<typename TFuncDo, typename TExc1, typename TExc2, typename TExc3>
+bool cageException(
+	TFuncDo doFunc,
+	std::function<void(const TExc1&)> catchFunc1,
+	std::function<void(const TExc2&)> catchFunc2,
+	std::function<void(const TExc3&)> catchFunc3)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const TExc1 &ex)
+	{
+		if (catchFunc1)
+		{
+			catchFunc1(ex);
+		}
+	}
+	catch (const TExc2 &ex)
+	{
+		if (catchFunc2)
+		{
+			catchFunc2(ex);
+		}
+	}
+	catch (const TExc3 &ex)
+	{
+		if (catchFunc3)
+		{
+			catchFunc3(ex);
+		}
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+template<typename TFuncDo, typename TExc1, typename TExc2>
+bool cageException(
+	TFuncDo doFunc,
+	std::function<void(const TExc1&)> catchFunc1,
+	std::function<void(const TExc2&)> catchFunc2)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const TExc1 &ex)
+	{
+		if (catchFunc1)
+		{
+			catchFunc1(ex);
+		}
+	}
+	catch (const TExc2 &ex)
+	{
+		if (catchFunc2)
+		{
+			catchFunc2(ex);
+		}
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+template<typename TFuncDo, typename TExc1>
+bool cageException(
+	TFuncDo doFunc,
+	std::function<void(const TExc1&)> catchFunc1)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const TExc1 &ex)
+	{
+		if (catchFunc1)
+		{
+			catchFunc1(ex);
+		}
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+template<typename TFuncDo>
+bool cageException(
+	TFuncDo doFunc)
+{
+	try
+	{
+		doFunc();
+		return false;
+	}
+	catch (const XException &ex)
+	{
+		handleXException(ex);
+	}
+	catch (const std::exception &ex)
+	{
+		handleStdException(ex);
+	}
+	catch (...)
+	{
+		handleAllException();
+	}
+	return true;
+}
+
+
+#define XTRY cageException ([&]()
+
+#define XEND );
+
+#define XCATCH(x,ex) ,std::function<void(const x &)>([&](const x &ex) {\
+	DEBUG_LINE("catched: " << ex.what ())
+
+#define XCATCH_END })
 
 
 //

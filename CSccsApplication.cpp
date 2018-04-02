@@ -135,7 +135,7 @@ CSccsApplication::execute ()
 		CDataSourceTextFile compare_data1 (mFile1);
         CDataSourceTextFile compare_data2 (mFile2);
 		
-        // We need to instantiate a template compare object
+        // We need to instantiate a template compare object,
         // create a typedef first so that we can use a short-handed
         // version later
 
@@ -160,15 +160,15 @@ CSccsApplication::execute ()
 			set_builder.startConstruction ();
 
 			// Loop through the result set and output the differing lines
-			CompareT::CResultSet::iterator it  = seq.begin();
-			CompareT::CResultSet::iterator ite = seq.end();
+			auto it  = seq.begin();
+			auto ite = seq.end();
 			
 			bool b_identical = true;
 			int line = 1;
 
 			for (; it != ite; ++it)
 			{
-				CompareT::CResultSet::value_type res = *it;
+				auto res = *it;
 
 				if (res->type () == cmp::kRemove)
 				{
@@ -201,4 +201,3 @@ CSccsApplication::execute ()
 		}
 	}
 }
-

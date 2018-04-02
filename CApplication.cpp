@@ -35,7 +35,7 @@ CApplication::~CApplication ()
 void
 CApplication::run ()
 {
-    try
+    XTRY
 	{
         // Check whether application uses parameters...
         
@@ -85,7 +85,15 @@ CApplication::run ()
 			// Note! It must be safe to call destroy () even if there some or even whole stuff
 			// remains uninitialized.
 
-			handleDestroy ();
+			XTRY
+			{
+				// Normally, destroy () shouldn't throw any exception!
+				// So, we suppress any accidentally thrown exception
+				// and finally restore the original ex
+
+				destroy();
+			}
+			XEND
             
             // Rethrow exception caused execution termination
             
@@ -94,83 +102,18 @@ CApplication::run ()
 
         // Destroy everything
         
-		handleDestroy ();
-    }
-    CATCH (XIllegalUsage, ex)
+		XTRY
+		{
+			destroy();
+		}
+		XEND
+	}
+    XCATCH (XIllegalUsage, ex)
     {
         outputUsage ();
     }
-    END_CATCH
-    CATCH (XException ,ex)
-    {
-		std::cerr << "Unhandled exception has been caught: " << ex.who () << " (" << ex.what ();
-		
-		if (*ex.info () != '\0')
-		{
-			std::cerr << ": " << ex.info ();
-		}
-
-		std::cerr << ")" << std::endl;
-	}
-    END_CATCH
-	CATCH_STD (ex)
-	{
-		std::cerr << "std::exception has been caught: " << typeid (ex).name ();
-
-		if (*ex.what () != '\0')
-		{
-			std::cerr << " (" << ex.what () << ")";
-		}
-
-		std::cerr << std::endl;
-	}
-	END_CATCH
-	catch (...)
-    {
-		std::cerr << "Unknown exception (...) has been caught" << std::endl;
-    }
-}
-
-
-// Private method, shouldn't be overriden
-
-void
-CApplication::handleDestroy ()
-{
-	try
-	{
-		// Normally, destroy () shouldn't throw any exception!
-
-		destroy ();
-	}
-	CATCH (XException, ex)
-	{
-		std::cerr << "Alert! Unhandled exception has been caught in destroy (): " << ex.who () << " (" << ex.what ();
-
-		if (*ex.info () != '\0')
-		{
-			std::cerr << ": " << ex.info ();
-		}
-
-		std::cerr << ")" << std::endl;
-	}
-	END_CATCH
-	CATCH_STD (ex)
-	{
-		std::cerr << "Alert! std::exception has been caught in destroy (): " << typeid (ex).name();
-		
-		if (*ex.what () != '\0')
-		{
-			std::cerr << " (" << ex.what () << ")";
-		}
-
-		std::cerr << std::endl;
-	}
-	END_CATCH
-	catch (...)
-	{
-		std::cerr << "Alert! Unknown exception (...) has been caught in destroy ()" << std::endl;
-	}
+	XCATCH_END
+	XEND
 }
 
 

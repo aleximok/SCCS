@@ -63,10 +63,6 @@ public:
 		return mReturnCode;
 	}
     
-private:
-
-	void handleDestroy ();
-
 protected:
     
 	int mArgc;
