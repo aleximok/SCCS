@@ -626,44 +626,44 @@ bool cageException(
 #define THROW_IF(c, x) { if (c) THROW(x); }
 #define THROW_IF_NOT(c, x) { if (! (c)) THROW(x); }
 
-#define THROW_IF_NULL(x) if((x) == NULL) THROW(XNullPointer);
+#define THROW_IF_NULL(x) if((x) == NULL) THROW(XNullPointer)
 
 #define THROW_IF_W(c, x) { if (c) THROW_WINFO(x, #c); }
 #define THROW_IF_NOT_W(c, x) { if (! (c)) THROW_WINFO(x, #c); }
 
-#define THROW_IF_NULL_W(c) if((c) == NULL) THROW_WINFO(XNullPointer, #c);
+#define THROW_IF_NULL_W(c) if((c) == NULL) THROW_WINFO(XNullPointer, #c)
 
 #define THROW_IF_WINFO(c, x, i) { if (c) THROW_WINFO(x, i); }
 #define THROW_IF_NOT_WINFO(c, x, i) { if (! (c)) THROW_WINFO(x, i); }
 
-#define THROW_IF_NULL_WINFO(c, i) if((c) == NULL) THROW_WINFO(XNullPointer, i);
+#define THROW_IF_NULL_WINFO(c, i) if((c) == NULL) THROW_WINFO(XNullPointer, i)
 
 
 // Generic exception 
-DECLARE_EXCEPTION(XUnknown, XException, "Unknown generic exception");
+DECLARE_EXCEPTION(XUnknown, XException, "Unknown generic exception")
 
 
 //
 // Memory exceptions
 //
 
-DECLARE_EXCEPTION(XMemory, XException, "Unknown");
-DECLARE_EXCEPTION(XNotEnoughMemory, XMemory, "Not enough memory");
-DECLARE_EXCEPTION(XNullPointer, XMemory, "NULL pointer dereferencing");
+DECLARE_EXCEPTION(XMemory, XException, "Unknown")
+DECLARE_EXCEPTION(XNotEnoughMemory, XMemory, "Not enough memory")
+DECLARE_EXCEPTION(XNullPointer, XMemory, "NULL pointer dereferencing")
 
 
 //
 // I/O exceptions
 //
 
-DECLARE_EXCEPTION(XIO, XException, "Input/output operation failed");
+DECLARE_EXCEPTION(XIO, XException, "Input/output operation failed")
 
-DECLARE_EXCEPTION(XCantOpen, XIO, "Can't open file");
-DECLARE_EXCEPTION(XCantRead, XIO, "Can't read from");
-DECLARE_EXCEPTION(XCantWrite, XIO, "Can't write to");
+DECLARE_EXCEPTION(XCantOpen, XIO, "Can't open file")
+DECLARE_EXCEPTION(XCantRead, XIO, "Can't read from")
+DECLARE_EXCEPTION(XCantWrite, XIO, "Can't write to")
 
-DECLARE_EXCEPTION(XEndOfFile, XIO, "Reached end of file");
-DECLARE_EXCEPTION(XBadContent, XIO, "Bad content of file");
+DECLARE_EXCEPTION(XEndOfFile, XIO, "Reached end of file")
+DECLARE_EXCEPTION(XBadContent, XIO, "Bad content of file")
 DECLARE_EXCEPTION(XCantEncode, XIO, "Data encoding failed")
 DECLARE_EXCEPTION(XCantDecode, XIO, "Data decoding failed")
 
@@ -672,29 +672,29 @@ DECLARE_EXCEPTION(XCantDecode, XIO, "Data decoding failed")
 // Runtime exceptions
 //
 
-DECLARE_EXCEPTION(XRuntime, XException, "Run-time error occured");
+DECLARE_EXCEPTION(XRuntime, XException, "Run-time error occured")
 
-DECLARE_EXCEPTION(XUnimplementedCode, XRuntime, "Execution flow reaches code that is not implemented.");
-DECLARE_EXCEPTION(XIllegalUsage, XRuntime, "Illegal command line has been given.");
+DECLARE_EXCEPTION(XUnimplementedCode, XRuntime, "Execution flow reaches code that is not implemented.")
+DECLARE_EXCEPTION(XIllegalUsage, XRuntime, "Illegal command line has been given.")
 
-DECLARE_EXCEPTION(XAlreadyInited, XRuntime, "Already initialized");
-DECLARE_EXCEPTION(XNotInited, XRuntime, "Not initialized");
-DECLARE_EXCEPTION(XCantInit, XRuntime, "Can not initialize");
+DECLARE_EXCEPTION(XAlreadyInited, XRuntime, "Already initialized")
+DECLARE_EXCEPTION(XNotInited, XRuntime, "Not initialized")
+DECLARE_EXCEPTION(XCantInit, XRuntime, "Can not initialize")
 
-DECLARE_EXCEPTION(XOperationAborted, XRuntime, "Operation was aborted");
-DECLARE_EXCEPTION(XOperationCanceled, XRuntime, "Operation was canceled");
+DECLARE_EXCEPTION(XOperationAborted, XRuntime, "Operation was aborted")
+DECLARE_EXCEPTION(XOperationCanceled, XRuntime, "Operation was canceled")
 
 DECLARE_EXCEPTION(XBadParameter, XRuntime, "Bad input parameter")
 DECLARE_EXCEPTION(XBadValue, XRuntime, "Variable value malformed")
 DECLARE_EXCEPTION(XUndefinedValue, XRuntime, "Variable value undefined")
 DECLARE_EXCEPTION(XDuplicatedValue, XRuntime, "Value duplication")
 DECLARE_EXCEPTION(XOutOfRangeValue, XRuntime, "Value out of range")
-DECLARE_EXCEPTION(XOutOfRangeIndex, XRuntime, "Index is out of range.");
+DECLARE_EXCEPTION(XOutOfRangeIndex, XRuntime, "Index is out of range.")
 DECLARE_EXCEPTION(XBadType, XRuntime, "Variable type not compliant")
 
 DECLARE_EXCEPTION(XBadOperation, XRuntime, "Wrong operation happens")
 DECLARE_EXCEPTION(XBadState, XRuntime, "Incorrect object state")
 
-#define UNIMPLEMENTED_CODE THROW(XUnimplementedCode);
+#define UNIMPLEMENTED_CODE THROW(XUnimplementedCode)
 
 #endif	// __XEXCEPTIONS_H
