@@ -1,23 +1,16 @@
 #ifndef __CCompare_h
 #define __CCompare_h
 
-
 #include <string>
-
 #include <vector>
 #include <algorithm>
 
 #include "XExceptions.h"
 
-
-// scope the class inside a namespace
-// this is always good practice to avoid clashes
-// with classes from external sources
-
 namespace cmp {
 
 // template function to determine if a pointer to a type points to
-// a null value. we also return true if the pointer itself is null
+// a null value, we also return true if the pointer itself is null
 
 template<typename T>
 inline bool isNull (T *t)
@@ -51,6 +44,7 @@ template<typename T>
 class CDataSource
 {
   public:
+
     // public typedef to define the data type
     typedef T data_type;
 
@@ -100,6 +94,7 @@ class CDataSource
 
 
 // public typedefs for the record types
+
 enum CRecordType
 {
     kUndefined=0,
@@ -159,6 +154,7 @@ template<typename T>
 class CCompare
 {
   public:
+
     // define a typedef for the results
     typedef std::vector<CResultType<T> *> CResultSet;
 
@@ -245,7 +241,7 @@ int CCompare<T>::process(CCompare<T>::CResultSet *pseq)
 	    &&  mSource->getSize() == mDest->getSize()
 		&&  memcmp(baseData1, baseData2, mSource->getSize()) == 0)
     {
-        TRACE_STR("Identical sections\n");
+		LOG_LINE ("Identical sources");
         return mSource->getSize();
     }
 
@@ -261,13 +257,14 @@ int CCompare<T>::process(CCompare<T>::CResultSet *pseq)
     // calculate the size of the lcs working array
 
     size_t size = (1 + mSource->getSize()) * (1 + mDest->getSize());
+
     if (size > 1)
     {
-		DEBUG_LINE("Allocating "  << size << " bytes");
+		LOG_LINE("Allocating "  << size << " bytes");
         mArray = new short[size];
         THROW_IF (mArray == NULL, XNotEnoughMemory);
 		
-        DEBUG_LINE("Compare< " << typeid(T).name() << "> processing type \'" <<
+        LOG_LINE("Compare< " << typeid(T).name() << "> processing type \'" <<
 			typeid(T::data_type).name() << "\'");
 
         // initialise the array

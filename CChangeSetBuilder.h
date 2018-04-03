@@ -39,7 +39,7 @@ public:
 
 		if (isValid ())
 		{
-			THROW_IF_NOT (mR == inIndex, XRangeError);
+			THROW_IF_NOT (mR == inIndex, XOutOfRangeIndex);
 			mR ++; 
 		}
 		else

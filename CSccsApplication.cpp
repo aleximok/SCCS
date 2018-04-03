@@ -172,26 +172,26 @@ CSccsApplication::execute ()
 
 				if (res->type () == cmp::kRemove)
 				{
-					DEBUG_STR (" -: ");
+					LOG_STR (" -: ");
 
 					set_builder.deleteLine (res->recNum () - 1);
 					b_identical = false;
 				}
 				else if (res->type () == cmp::kInsert)
 				{
-					DEBUG_STR (" +: ");
+					LOG_STR (" +: ");
 
 					set_builder.insertLine (res->recNum () - 1);
 					b_identical = false;
 				}
 				else
 				{
-					DEBUG_STR (" =: ");
+					LOG_STR (" =: ");
 
 					set_builder.skipLine ();
 				}
 				
-				DEBUG_STR (std::setw (4) << res->recNum () << std::setw (4) <<
+				LOG_STR (std::setw (4) << res->recNum () << std::setw (4) <<
 					line ++ << res->data().c_str() << std::endl);
 			}
 			
